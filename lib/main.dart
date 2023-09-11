@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:todo_app/page/notes_page.dart';
 
+import 'newpage.dart';
+
 Future main() async {
   // Avoid errors caused by flutter upgrade.
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,6 +31,6 @@ class MyApp extends StatelessWidget {
             elevation: 0,
           ),
         ),
-        home: NotesPage(),
+        home: const NotesPage(),
       );
 }

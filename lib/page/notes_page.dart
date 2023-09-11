@@ -8,6 +8,8 @@ import 'edit_note_page.dart';
 import 'note_detail_page.dart';
 
 class NotesPage extends StatefulWidget {
+  const NotesPage({super.key});
+
   @override
   _NotesPageState createState() => _NotesPageState();
 }
@@ -41,17 +43,17 @@ class _NotesPageState extends State<NotesPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: Text(
+          title: const Text(
             'Notes',
             style: TextStyle(fontSize: 24),
           ),
-          actions: [Icon(Icons.search), SizedBox(width: 12)],
+          actions: const [Icon(Icons.search), SizedBox(width: 12)],
         ),
         body: Center(
           child: isLoading
-              ? CircularProgressIndicator()
+              ? const CircularProgressIndicator()
               : notes.isEmpty
-                  ? Text(
+                  ? const Text(
                       'No Notes',
                       style: TextStyle(color: Colors.white, fontSize: 24),
                     )
@@ -59,10 +61,10 @@ class _NotesPageState extends State<NotesPage> {
         ),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.black,
-          child: Icon(Icons.add),
+          child: const Icon(Icons.add),
           onPressed: () async {
             await Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => AddEditNotePage()),
+              MaterialPageRoute(builder: (context) => const AddEditNotePage()),
             );
 
             refreshNotes();
@@ -70,26 +72,24 @@ class _NotesPageState extends State<NotesPage> {
         ),
       );
 
-  Widget buildNotes() => StaggeredGrid.count(
-        padding: EdgeInsets.all(8),
-        itemCount: notes.length,
-        staggeredTileBuilder: (index) => Tile.fit(2),
-        crossAxisCount: 4,
-        mainAxisSpacing: 4,
-        crossAxisSpacing: 4,
-        itemBuilder: (context, index) {
-          final note = notes[index];
+  Widget buildNotes() => ListView.builder(
+itemCount: notes.length,
+    padding: EdgeInsets.all(8),
+    itemBuilder: (context, index) {
+      final note = notes[index];
 
-          return GestureDetector(
-            onTap: () async {
-              await Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => NoteDetailPage(noteId: note.id!),
-              ));
+      return GestureDetector(
+        onTap: () async {
+          await Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => NoteDetailPage(noteId: note.id!),
+          ));
 
-              refreshNotes();
-            },
-            child: NoteCardWidget(note: note, index: index),
-          );
+          refreshNotes();
         },
+        child: NoteCardWidget(note: note, index: index),
       );
+    },
+  );
+
+
 }
