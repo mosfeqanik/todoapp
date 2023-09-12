@@ -45,10 +45,10 @@ class NotesDatabase {
 
   //Create DB
   Future _createDB(Database db, int version) async {
-    final idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
-    final textType = 'TEXT NOT NULL';
-    final boolType = 'BOOLEAN NOT NULL';
-    final integerType = 'INTEGER NOT NULL';
+    const idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
+    const textType = 'TEXT NOT NULL';
+    const boolType = 'BOOLEAN NOT NULL';
+    const integerType = 'INTEGER NOT NULL';
 
     /*
     * db execute
@@ -58,8 +58,8 @@ class NotesDatabase {
     await db.execute('''
 CREATE TABLE $tableNameNotes ( 
   ${NoteFields.id} $idType, 
-  ${NoteFields.isImportant} $boolType,
-  ${NoteFields.number} $integerType,
+  ${NoteFields.macAddress} $textType,
+  ${NoteFields.ipAddress} $textType,
   ${NoteFields.title} $textType,
   ${NoteFields.description} $textType,
   ${NoteFields.time} $textType

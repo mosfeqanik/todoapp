@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
-import '../db/notes_database.dart';
-import '../model/note.dart';
-import '../widget/note_card_widget.dart';
+import '../../db/notes_database.dart';
+import '../../model/note.dart';
+import '../../widget/note_card_widget.dart';
 import 'edit_note_page.dart';
 import 'note_detail_page.dart';
 
@@ -11,7 +10,7 @@ class NotesPage extends StatefulWidget {
   const NotesPage({super.key});
 
   @override
-  _NotesPageState createState() => _NotesPageState();
+  State<NotesPage> createState() => _NotesPageState();
 }
 
 class _NotesPageState extends State<NotesPage> {
@@ -28,7 +27,6 @@ class _NotesPageState extends State<NotesPage> {
   @override
   void dispose() {
     NotesDatabase.instance.close();
-
     super.dispose();
   }
 
@@ -64,32 +62,30 @@ class _NotesPageState extends State<NotesPage> {
           child: const Icon(Icons.add),
           onPressed: () async {
             await Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => const AddEditNotePage()),
+              MaterialPageRoute(
+                builder: (context) => const AddEditNotePage(),
+              ),
             );
-
             refreshNotes();
           },
         ),
       );
-
   Widget buildNotes() => ListView.builder(
-itemCount: notes.length,
-    padding: EdgeInsets.all(8),
-    itemBuilder: (context, index) {
-      final note = notes[index];
-
-      return GestureDetector(
-        onTap: () async {
-          await Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => NoteDetailPage(noteId: note.id!),
-          ));
-
-          refreshNotes();
+        itemCount: notes.length,
+        padding: const EdgeInsets.all(8),
+        itemBuilder: (context, index) {
+          final note = notes[index];
+          return GestureDetector(
+            onTap: () async {
+              await Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => NoteDetailPage(noteId: note.id!),
+                ),
+              );
+              refreshNotes();
+            },
+            child: NoteCardWidget(note: note, index: index),
+          );
         },
-        child: NoteCardWidget(note: note, index: index),
       );
-    },
-  );
-
-
 }
