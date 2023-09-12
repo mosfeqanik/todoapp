@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import '../../db/notes_database.dart';
 import '../../model/note.dart';
+import '../../provider/note/note_provider.dart';
 import '../../widget/note_card_widget.dart';
 import 'edit_note_page.dart';
 import 'note_detail_page.dart';
@@ -14,28 +15,14 @@ class NotesPage extends StatefulWidget {
 }
 
 class _NotesPageState extends State<NotesPage> {
-  late List<Note> notes;
-  bool isLoading = false;
-
+  late NoteProvider _noteProvider;
   @override
   void initState() {
     super.initState();
-
-    refreshNotes();
-  }
-
-  @override
-  void dispose() {
-    NotesDatabase.instance.close();
-    super.dispose();
-  }
-
-  Future refreshNotes() async {
-    setState(() => isLoading = true);
-
-    notes = await NotesDatabase.instance.readAllNotes();
-
-    setState(() => isLoading = false);
+    _noteProvider = Provider.of<NoteProvider>(context, listen: false);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _noteProvider.refreshNotes();
+    });
   }
 
   @override
@@ -47,16 +34,18 @@ class _NotesPageState extends State<NotesPage> {
           ),
           actions: const [Icon(Icons.search), SizedBox(width: 12)],
         ),
-        body: Center(
-          child: isLoading
-              ? const CircularProgressIndicator()
-              : notes.isEmpty
-                  ? const Text(
-                      'No Notes',
-                      style: TextStyle(color: Colors.white, fontSize: 24),
-                    )
-                  : buildNotes(),
-        ),
+        body: Consumer<NoteProvider>(
+            builder: (_, controller, ___) => Center(
+                  child: controller.isLoading
+                      ? const CircularProgressIndicator()
+                      : controller.notes.isEmpty
+                          ? const Text(
+                              'No Notes',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 24),
+                            )
+                          : buildNotes(notes: controller.notes),
+                )),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.black,
           child: const Icon(Icons.add),
@@ -66,11 +55,12 @@ class _NotesPageState extends State<NotesPage> {
                 builder: (context) => const AddEditNotePage(),
               ),
             );
-            refreshNotes();
+            _noteProvider.refreshNotes();
           },
         ),
       );
-  Widget buildNotes() => ListView.builder(
+
+  Widget buildNotes({required List<Note> notes}) => ListView.builder(
         itemCount: notes.length,
         padding: const EdgeInsets.all(8),
         itemBuilder: (context, index) {
@@ -82,7 +72,7 @@ class _NotesPageState extends State<NotesPage> {
                   builder: (context) => NoteDetailPage(noteId: note.id!),
                 ),
               );
-              refreshNotes();
+              _noteProvider.refreshNotes();
             },
             child: NoteCardWidget(note: note, index: index),
           );

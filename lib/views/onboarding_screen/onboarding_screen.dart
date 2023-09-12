@@ -51,10 +51,11 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
             onpress: () async {
               LocalStorageManager.saveData(
                   SharedPrefStrings.isOnboardingShowed, true);
-              Navigator.of(context).push(
+              Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(
                   builder: (context) => const NotesPage(),
                 ),
+                (route) => false,
               );
             },
             text: 'Next',
