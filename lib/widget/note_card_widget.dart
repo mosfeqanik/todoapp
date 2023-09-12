@@ -32,7 +32,7 @@ class NoteCardWidget extends StatelessWidget {
     return Card(
       color: color,
       child: Container(
-        constraints: BoxConstraints(minHeight: minHeight),
+        constraints: BoxConstraints(minHeight: 80),
         padding: const EdgeInsets.all(8),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -50,6 +50,26 @@ class NoteCardWidget extends StatelessWidget {
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  note.ipAddress!,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 14,
+                  ),
+                ),
+                Text(
+                  note.macAddress!,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 14,
+
+                  ),
+                ),
+              ],
             ),
           ],
         ),

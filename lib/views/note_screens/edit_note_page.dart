@@ -24,6 +24,7 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
   void initState() {
     super.initState();
     _noteProvider = Provider.of<NoteProvider>(context, listen: false);
+    _noteProvider.checkWifiAvailability();
     title = widget.note?.title ?? '';
     description = widget.note?.description ?? '';
   }
@@ -80,6 +81,7 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
       description: description,
     );
     await _noteProvider.updateNote(note);
+    _noteProvider.refreshNotes();
   }
 
   Future addNote() async {
@@ -89,5 +91,6 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
       createdTime: DateTime.now(),
     );
     await _noteProvider.addNote(note);
+    _noteProvider.refreshNotes();
   }
 }

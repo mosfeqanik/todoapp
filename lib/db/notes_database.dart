@@ -47,9 +47,8 @@ class NotesDatabase {
   Future _createDB(Database db, int version) async {
     const idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
     const textType = 'TEXT NOT NULL';
-    const boolType = 'BOOLEAN NOT NULL';
-    const integerType = 'INTEGER NOT NULL';
-
+    const macAddressTextType = 'TEXT NOT NULL';
+    const ipAddressTextType = 'TEXT NOT NULL';
     /*
     * db execute
     * CREATE TABLE
@@ -58,8 +57,8 @@ class NotesDatabase {
     await db.execute('''
 CREATE TABLE $tableNameNotes ( 
   ${NoteFields.id} $idType, 
-  ${NoteFields.macAddress} $textType,
-  ${NoteFields.ipAddress} $textType,
+  ${NoteFields.macAddress} $macAddressTextType,
+  ${NoteFields.ipAddress} $ipAddressTextType,
   ${NoteFields.title} $textType,
   ${NoteFields.description} $textType,
   ${NoteFields.time} $textType
@@ -125,7 +124,7 @@ CREATE TABLE $tableNameNotes (
   Future<List<Note>> readAllNotes() async {
     final db = await instance.database;
 
-    final orderBy = '${NoteFields.time} ASC';
+    const orderBy = '${NoteFields.time} ASC';
     // final result =
     //     await db.rawQuery('SELECT * FROM $tableNotes ORDER BY $orderBy');
 
