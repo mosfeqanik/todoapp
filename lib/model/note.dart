@@ -15,16 +15,16 @@ class NoteFields {
 
 class Note {
   final int? id;
-  final String macAddress;
-  final String ipAddress;
+  final String? macAddress;
+  final String? ipAddress;
   final String title;
   final String description;
   final DateTime createdTime;
 
   const Note({
     this.id,
-    required this.macAddress,
-    required this.ipAddress,
+     this.macAddress,
+     this.ipAddress,
     required this.title,
     required this.description,
     required this.createdTime,

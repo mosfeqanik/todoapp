@@ -24,9 +24,6 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
   void initState() {
     super.initState();
     _noteProvider = Provider.of<NoteProvider>(context, listen: false);
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _noteProvider.initPlatformState();
-    });
     title = widget.note?.title ?? '';
     description = widget.note?.description ?? '';
   }
@@ -82,19 +79,15 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
       title: title,
       description: description,
     );
-
-    await NotesDatabase.instance.update(note);
+    await _noteProvider.updateNote(note);
   }
 
   Future addNote() async {
     final note = Note(
       title: title,
-      ipAddress: "",
-      macAddress: "",
       description: description,
       createdTime: DateTime.now(),
     );
-
-    await NotesDatabase.instance.create(note);
+    await _noteProvider.addNote(note);
   }
 }
