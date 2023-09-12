@@ -96,6 +96,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  get_mac_address:
+    dependency: "direct main"
+    description:
+      name: get_mac_address
+      sha256: ab20a68b43a5f377fdc29cb925f2f26ade8d50c1f64505ab47be897183c1c7b3
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.2"
   intl:
     dependency: "direct main"
     description:

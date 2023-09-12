@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../db/notes_database.dart';
 import '../../model/note.dart';
+import '../../provider/note/note_provider.dart';
 import '../../widget/note_form_widget.dart';
 
 class AddEditNotePage extends StatefulWidget {
@@ -16,11 +18,15 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
   final _formKey = GlobalKey<FormState>();
   late String title;
   late String description;
+  late NoteProvider _noteProvider;
 
   @override
   void initState() {
     super.initState();
-
+    _noteProvider = Provider.of<NoteProvider>(context, listen: false);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _noteProvider.initPlatformState();
+    });
     title = widget.note?.title ?? '';
     description = widget.note?.description ?? '';
   }

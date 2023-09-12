@@ -41,6 +41,7 @@ dependencies:
   provider:
   shared_preferences:
   intl:
+  get_mac_address: ^0.0.2
 dev_dependencies:
   flutter_test:
     sdk: flutter
