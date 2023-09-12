@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:todo_app/provider/note/note_provider.dart';
 import 'package:todo_app/views/splash_screen/splash_screen.dart';
 
+import 'db/notes_database.dart';
+
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([
@@ -22,7 +24,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (context) => NoteProvider()),
+          ChangeNotifierProvider(create: (context) => NoteProvider(),),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,

@@ -45,7 +45,8 @@ class _NotesPageState extends State<NotesPage> {
                                   TextStyle(color: Colors.white, fontSize: 24),
                             )
                           : buildNotes(notes: controller.notes),
-                )),
+                ),
+            ),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.black,
           child: const Icon(Icons.add),
@@ -59,6 +60,7 @@ class _NotesPageState extends State<NotesPage> {
           },
         ),
       );
+
 
   Widget buildNotes({required List<Note> notes}) => ListView.builder(
         itemCount: notes.length,
