@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 import '../../model/note.dart';
 import '../../provider/note/note_provider.dart';
@@ -19,9 +20,58 @@ class _NotesPageState extends State<NotesPage> {
   @override
   void initState() {
     super.initState();
+    // _noteProvider = Provider.of<NoteProvider>(context, listen: false);
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //   Provider.of<NoteProvider>(context, listen: false).refreshNotes();
+    // });
+    // if (Provider.of<NoteProvider>(context, listen: false).notes.isEmpty) {
+    //   showDialog();
+    // }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
     _noteProvider = Provider.of<NoteProvider>(context, listen: false);
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       Provider.of<NoteProvider>(context, listen: false).refreshNotes();
+    });
+
+    if (Provider.of<NoteProvider>(context, listen: false).notes.isEmpty) {
+      showDialog();
+    }
+  }
+
+  void showDialog() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Alert(
+        context: context,
+        type: AlertType.info,
+        title: "ALERT",
+        desc: "You have no To-do",
+        buttons: [
+          DialogButton(
+            onPressed: () async {
+              Navigator.of(context).pop(); // Close the current dialog if needed
+              await Future.delayed(
+                  Duration.zero); // Wait for the build to complete
+              await Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const AddEditNotePage(),
+                ),
+              );
+            },
+            color: Colors.redAccent,
+            radius: BorderRadius.circular(10.0),
+            child: const Text(
+              "Save your Notes",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+          ),
+        ],
+      ).show();
     });
   }
 
@@ -41,16 +91,18 @@ class _NotesPageState extends State<NotesPage> {
           actions: const [Icon(Icons.search), SizedBox(width: 12)],
         ),
         body: Consumer<NoteProvider>(
-          builder: (_, controller, ___) => Center(
-            child: controller.isLoading
-                ? const CircularProgressIndicator()
-                : controller.notes.isEmpty
-                    ? const Text(
-                        'No Notes',
-                        style: TextStyle(color: Colors.white, fontSize: 24),
-                      )
-                    : buildNotes(notes: controller.notes),
-          ),
+          builder: (_, controller, ___) {
+            return Center(
+              child: controller.isLoading
+                  ? const CircularProgressIndicator()
+                  : controller.notes.isEmpty
+                      ? const Text(
+                          'No Notes',
+                          style: TextStyle(color: Colors.white, fontSize: 24),
+                        )
+                      : buildNotes(notes: controller.notes),
+            );
+          },
         ),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.black,
