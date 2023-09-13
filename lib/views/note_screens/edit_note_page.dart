@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../db/notes_database.dart';
 import '../../model/note.dart';
 import '../../provider/note/note_provider.dart';
 import '../../widget/note_form_widget.dart';
@@ -57,7 +56,11 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
           foregroundColor: Colors.white,
           backgroundColor: isFormValid ? null : Colors.grey.shade700,
         ),
-        onPressed: addOrUpdateNote,
+        onPressed: () {
+          addOrUpdateNote();
+          Provider.of<NoteProvider>(context, listen: false).refreshNotes();
+          Navigator.of(context).pop();
+        },
         child: const Text('Save'),
       ),
     );
@@ -81,7 +84,6 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
       description: description,
     );
     await _noteProvider.updateNote(note);
-    _noteProvider.refreshNotes();
   }
 
   Future addNote() async {
@@ -91,6 +93,5 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
       createdTime: DateTime.now(),
     );
     await _noteProvider.addNote(note);
-    _noteProvider.refreshNotes();
   }
 }

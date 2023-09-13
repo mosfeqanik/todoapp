@@ -1,6 +1,5 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
 import 'package:network_info_plus/network_info_plus.dart';
 
 import '../../db/notes_database.dart';
@@ -9,13 +8,16 @@ import '../../model/note.dart';
 class NoteProvider extends ChangeNotifier {
   List<Note> notes = [];
   bool isLoading = false;
-  String wifiIP ="";
+  String wifiIP = "";
 
   Future refreshNotes() async {
     isLoading = true;
+    notifyListeners();
     notes = await NotesDatabase.instance.readAllNotes();
     isLoading = false;
+    notifyListeners();
   }
+
   Future addNote(Note note) async {
     isLoading = true;
     note = note.copy(
@@ -25,25 +27,26 @@ class NoteProvider extends ChangeNotifier {
     await NotesDatabase.instance.create(note);
     isLoading = false;
   }
+
   Future updateNote(Note note) async {
     isLoading = true;
-         await NotesDatabase.instance.update(note);
+    await NotesDatabase.instance.update(note);
     isLoading = false;
   }
-
 
   @override
   void dispose() {
     NotesDatabase.instance.close();
     super.dispose();
   }
+
 // Check if Wi-Fi is available
   Future<void> checkWifiAvailability() async {
     checkNetworkConnectivity();
     final networkInfo = NetworkInfo();
     final wifiIPText = await networkInfo.getWifiIP();
     if (wifiIPText != null) {
-      wifiIP=wifiIPText;
+      wifiIP = wifiIPText;
       print('Wi-Fi is available. IP: $wifiIPText');
     } else {
       print('Wi-Fi is not available.');
@@ -61,5 +64,4 @@ class NoteProvider extends ChangeNotifier {
       print('No network connection');
     }
   }
-
 }

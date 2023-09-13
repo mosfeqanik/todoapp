@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../utils/local_storage_manager.dart';
 import '../../utils/shared_pref_keys.dart';
@@ -16,6 +17,7 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   bool isLoggedIn = true;
+  static const CHANNEL = MethodChannel("com.mosfeqanik.todo_app");
 
   @override
   void initState() {
@@ -23,16 +25,12 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(const Duration(seconds: 3), () => setPref());
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
   void setPref() async {
     bool isOnboardingShowed;
     isOnboardingShowed = await LocalStorageManager.readData(
             SharedPrefStrings.isOnboardingShowed) ??
         false;
+    // await getMacAddress();
     if (isOnboardingShowed) {
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => const NotesPage()),
@@ -43,6 +41,16 @@ class _SplashScreenState extends State<SplashScreen> {
           (route) => false);
     }
   }
+
+  // Future<String?> getMacAddress() async {
+  //   try {
+  //     final String mac = await MethodChannel(CHANNEL).invokeMethod('getMac');
+  //     return mac;
+  //   } on PlatformException catch (e) {
+  //     print("Error getting MAC address: ${e.message}");
+  //     return null;
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {

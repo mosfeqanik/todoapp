@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../../provider/note/note_provider.dart';
 import '../../utils/appstrings.dart';
 import '../../utils/local_storage_manager.dart';
 import '../../utils/shared_pref_keys.dart';
@@ -48,14 +50,20 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
             ),
             const SizedBox(
               height: 48.0,
-            ),const Padding(
-              padding: EdgeInsets.symmetric(vertical: 25.0,horizontal: 40.0),
-              child: Text(AppStrings.onboardingDescription,textAlign: TextAlign.start,style: TextStyle(color: Colors.white),)
             ),
+            const Padding(
+                padding: EdgeInsets.symmetric(vertical: 25.0, horizontal: 40.0),
+                child: Text(
+                  AppStrings.onboardingDescription,
+                  textAlign: TextAlign.start,
+                  style: TextStyle(color: Colors.white),
+                )),
             CustomButton(
               onpress: () async {
                 LocalStorageManager.saveData(
                     SharedPrefStrings.isOnboardingShowed, true);
+                Provider.of<NoteProvider>(context, listen: false)
+                    .refreshNotes();
                 Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(
                     builder: (context) => const NotesPage(),

@@ -21,8 +21,14 @@ class _NotesPageState extends State<NotesPage> {
     super.initState();
     _noteProvider = Provider.of<NoteProvider>(context, listen: false);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _noteProvider.refreshNotes();
+      Provider.of<NoteProvider>(context, listen: false).refreshNotes();
     });
+  }
+
+  @override
+  void dispose() {
+    Provider.of<NoteProvider>(context, listen: false).dispose();
+    super.dispose();
   }
 
   @override
@@ -35,18 +41,17 @@ class _NotesPageState extends State<NotesPage> {
           actions: const [Icon(Icons.search), SizedBox(width: 12)],
         ),
         body: Consumer<NoteProvider>(
-            builder: (_, controller, ___) => Center(
-                  child: controller.isLoading
-                      ? const CircularProgressIndicator()
-                      : controller.notes.isEmpty
-                          ? const Text(
-                              'No Notes',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 24),
-                            )
-                          : buildNotes(notes: controller.notes),
-                ),
-            ),
+          builder: (_, controller, ___) => Center(
+            child: controller.isLoading
+                ? const CircularProgressIndicator()
+                : controller.notes.isEmpty
+                    ? const Text(
+                        'No Notes',
+                        style: TextStyle(color: Colors.white, fontSize: 24),
+                      )
+                    : buildNotes(notes: controller.notes),
+          ),
+        ),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.black,
           child: const Icon(Icons.add),
@@ -60,7 +65,6 @@ class _NotesPageState extends State<NotesPage> {
           },
         ),
       );
-
 
   Widget buildNotes({required List<Note> notes}) => ListView.builder(
         itemCount: notes.length,
